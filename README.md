@@ -1,1 +1,1 @@
-# ComposeDemo
+# ComposeDemo [![CircleCI](https://circleci.com/gh/x1210x/ComposeDemo/tree/main.svg?style=shield)](https://circleci.com/gh/x1210x/ComposeDemo/tree/main)
