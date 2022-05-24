@@ -14,6 +14,9 @@ cache:
     # Android build cache (see http://tools.android.com/tech-docs/build-cache)
     - $HOME/.android/build-cache
 
+jdk:
+  - oraclejdk11
+
 android:
   components:
     # The BuildTools version used by your project
@@ -27,7 +30,7 @@ android:
     - extra-android-m2repository
 
 notifications:
-  slack: x1210x-ci:WO5MSTpYg9YO29knrdT5elaw
+  slack: x1210x-ci:tRI5pGCnMy3yqWBIEtwiReYi
 
 before_install:
   - chmod +x gradlew
