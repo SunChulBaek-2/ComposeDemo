@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -64,4 +66,16 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:${rootProject.constraintLayoutComposeVersion}"
     debugImplementation "androidx.compose.ui:ui-tooling:${rootProject.composeVersion}"
     debugImplementation "androidx.compose.ui:ui-test-manifest:${rootProject.composeVersion}"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:${rootProject.hiltVersion}"
+    kapt "com.google.dagger:hilt-android-compiler:${rootProject.hiltVersion}"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.okhttpVersion}"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:${rootProject.timberVersion}"
 }
