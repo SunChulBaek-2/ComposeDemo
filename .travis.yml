@@ -18,6 +18,8 @@ jdk:
   - oraclejdk11
 
 before_install:
+  - yes | sdkmanager "platforms:android-32"
+  - yes | sdkmanager "build-tools;32.0.0"
   - chmod +x gradlew
 
 android:
