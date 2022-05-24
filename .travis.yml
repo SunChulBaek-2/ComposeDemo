@@ -33,6 +33,7 @@ notifications:
   slack: x1210x-ci:tRI5pGCnMy3yqWBIEtwiReYi
 
 before_install:
+  - yes | sdkmanager "platforms;android-30"
   - chmod +x gradlew
 
 script:
