@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField("String", "CLIENT_ID", "\"vCPpySLTvEU3lta2hZx5\"")
+        buildConfigField("String", "CLIENT_SECRET", "\"pvkERt_Pk2\"")
     }
 
     buildTypes {
@@ -78,4 +80,7 @@ dependencies {
 
     // Timber
     implementation "com.jakewharton.timber:timber:${rootProject.timberVersion}"
+
+    // Coil
+    implementation "io.coil-kt:coil-compose:${rootProject.coilVersion}"
 }

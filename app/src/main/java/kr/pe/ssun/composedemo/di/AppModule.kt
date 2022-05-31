@@ -6,14 +6,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kr.pe.ssun.composedemo.data.PhotoRepository
-import kr.pe.ssun.composedemo.data.PhotoService
+import kr.pe.ssun.composedemo.data.SearchRepository
+import kr.pe.ssun.composedemo.data.SearchService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import kr.pe.ssun.composedemo.BuildConfig as BuildConfig1
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,10 +32,21 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun providesHeaderInterceptor() = Interceptor { chain ->
+        val request = chain.request().newBuilder()
+            .addHeader("X-Naver-Client-Id", BuildConfig1.CLIENT_ID)
+            .addHeader("X-Naver-Client-Secret", BuildConfig1.CLIENT_SECRET)
+            .build()
+        chain.proceed(request)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor, headerInterceptor: Interceptor): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(headerInterceptor)
             .build()
     }
 
@@ -42,7 +54,7 @@ object AppModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com/")
+            .baseUrl("https://openapi.naver.com/v1/search/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -50,13 +62,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideJsonPlaceHolderService(retrofit: Retrofit): PhotoService {
-        return retrofit.create(PhotoService::class.java)
+    fun provideJsonPlaceHolderService(retrofit: Retrofit): SearchService {
+        return retrofit.create(SearchService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideRepository(photoService: PhotoService): PhotoRepository {
-        return PhotoRepository(photoService)
+    fun provideRepository(searchService: SearchService): SearchRepository {
+        return SearchRepository(searchService)
     }
 }

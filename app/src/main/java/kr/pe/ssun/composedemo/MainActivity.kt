@@ -4,23 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.lifecycleScope
+import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kr.pe.ssun.composedemo.data.model.Photo
+import kr.pe.ssun.composedemo.data.model.ShopItem
 import kr.pe.ssun.composedemo.ui.theme.ComposeDemoTheme
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,55 +29,74 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeDemoTheme {
-                ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                    val (button, text, column) = createRefs()
-                    Button(onClick = {},
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(60.dp)
-                            .constrainAs(button) {
-                                top.linkTo(parent.top)
-                                end.linkTo(parent.end)
-                            }) {
-                        Text("Search")
-                    }
-
-                    var textState by remember { mutableStateOf(TextFieldValue("")) }
-                    TextField(
-                        value = textState,
-                        onValueChange = { textState = it },
-                        modifier = Modifier.constrainAs(text) {
-                            top.linkTo(button.top)
-                            bottom.linkTo(button.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(button.start)
-                        }
-                    )
-
-                    val photos by mainViewModel.photos.collectAsState()
-                    photoList(modifier = Modifier.fillMaxWidth().padding(top = 60.dp).constrainAs(column) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }, photos = photos?.photos)
-                }
+                ComposeDemoApp()
             }
         }
+    }
 
-        lifecycleScope.launch {
-            mainViewModel.getPhotos()
+    @Composable
+    private fun ComposeDemoApp() {
+        val coroutineScope = rememberCoroutineScope()
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.wrapContentHeight()) {
+                var textState by remember { mutableStateOf(TextFieldValue("")) }
+                TextField(
+                    value = textState,
+                    onValueChange = { textState = it },
+                    modifier = Modifier.weight(1f)
+                )
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            mainViewModel.search(textState.text)
+                        }
+                    },
+                    modifier = Modifier.wrapContentSize()
+                ) {
+                    Text("Search")
+                }
+            }
+            val photos by mainViewModel.photos.collectAsState()
+            SearchList(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shopItems = photos?.photos
+            )
         }
     }
 }
 
 @Composable
-fun photoList(modifier: Modifier, photos: List<Photo>?) {
+fun SearchList(modifier: Modifier, shopItems: List<ShopItem>?) {
     LazyColumn(modifier = modifier) {
-        photos?.forEach {
-            item {
-                Text(text = it.id.toString())
+        shopItems?.forEach { shopItem ->
+            item(shopItem.productId) {
+                ShopItem(shopItem = shopItem)
             }
         }
+    }
+}
+
+@Composable
+fun ShopItem(shopItem: ShopItem) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable { },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        AsyncImage(
+            model = shopItem.image,
+            contentDescription = shopItem.title,
+            modifier = Modifier.padding(start = 10.dp).width(100.dp).height(100.dp),
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Crop,
+        )
+        Text(
+            text = shopItem.title,
+            modifier = Modifier.padding(start = 10.dp)
+        )
     }
 }

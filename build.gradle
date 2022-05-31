@@ -1,6 +1,7 @@
 buildscript {
     ext {
         activityComposeVersion = '1.4.0'
+        coilVersion = '2.1.0'
         composeVersion = '1.1.1'
         constraintLayoutComposeVersion = '1.0.1'
         hiltVersion = '2.41'

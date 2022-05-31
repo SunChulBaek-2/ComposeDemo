@@ -6,23 +6,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kr.pe.ssun.composedemo.domain.GetPhotoParam
-import kr.pe.ssun.composedemo.domain.GetPhotoResult
-import kr.pe.ssun.composedemo.domain.GetPhotoUseCase
+import kr.pe.ssun.composedemo.domain.SearchParam
+import kr.pe.ssun.composedemo.domain.SearchResult
+import kr.pe.ssun.composedemo.domain.SearchUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getPhotoUseCase: GetPhotoUseCase
+    private val searchUseCase: SearchUseCase
 ): ViewModel() {
 
-    private val _photos = MutableStateFlow<GetPhotoResult?>(null)
-    val photos: StateFlow<GetPhotoResult?> = _photos
+    private val _photos = MutableStateFlow<SearchResult?>(null)
+    val photos: StateFlow<SearchResult?> = _photos
 
-    suspend fun getPhotos() = viewModelScope.launch(Dispatchers.Main) {
-        getPhotoUseCase(GetPhotoParam()).collect { result ->
+    suspend fun search(query: String) = viewModelScope.launch(Dispatchers.Main) {
+        searchUseCase(SearchParam(query, 100, 1, "date")).collect { result ->
             when {
                 result.isSuccess -> {
                     _photos.emit(result.getOrNull())
