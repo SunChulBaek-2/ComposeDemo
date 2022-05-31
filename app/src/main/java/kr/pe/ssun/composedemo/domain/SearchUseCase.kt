@@ -15,7 +15,7 @@ data class SearchParam(
 )
 
 data class SearchResult(
-    val photos: List<ShopItem>
+    val shopItems: List<ShopItem>
 )
 
 class SearchUseCase @Inject constructor(

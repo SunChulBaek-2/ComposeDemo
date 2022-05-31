@@ -61,19 +61,19 @@ class MainActivity : ComponentActivity() {
                     Text("Search")
                 }
             }
-            val photos by mainViewModel.photos.collectAsState()
-            SearchList(
+            val searchResult by mainViewModel.searchResult.collectAsState()
+            ShopList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                shopItems = photos?.photos
+                shopItems = searchResult?.shopItems
             )
         }
     }
 }
 
 @Composable
-fun SearchList(modifier: Modifier, shopItems: List<ShopItem>?) {
+fun ShopList(modifier: Modifier, shopItems: List<ShopItem>?) {
     LazyColumn(modifier = modifier) {
         shopItems?.forEach { shopItem ->
             item(shopItem.productId) {

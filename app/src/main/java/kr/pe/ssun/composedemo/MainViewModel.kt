@@ -17,17 +17,17 @@ class MainViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
 ): ViewModel() {
 
-    private val _photos = MutableStateFlow<SearchResult?>(null)
-    val photos: StateFlow<SearchResult?> = _photos
+    private val _searchResult = MutableStateFlow<SearchResult?>(null)
+    val searchResult: StateFlow<SearchResult?> = _searchResult
 
     suspend fun search(query: String) = viewModelScope.launch(Dispatchers.Main) {
         searchUseCase(SearchParam(query, 100, 1, "date")).collect { result ->
             when {
                 result.isSuccess -> {
-                    _photos.emit(result.getOrNull())
+                    _searchResult.emit(result.getOrNull())
                 }
                 result.isFailure -> {
-                    _photos.emit(null)
+                    _searchResult.emit(null)
                 }
             }
         }
