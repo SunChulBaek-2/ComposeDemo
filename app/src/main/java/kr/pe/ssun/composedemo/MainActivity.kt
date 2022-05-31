@@ -106,16 +106,25 @@ fun ShopItem(shopItem: ShopItem) {
             text = buildAnnotatedString {
                 val indexOfOpenTag = shopItem.title.indexOf("<b>")
                 val indexOfCloseTag = shopItem.title.indexOf("</b>")
-                append(shopItem.title.substring(0, indexOfOpenTag))
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(shopItem.title.substring(indexOfOpenTag + "<b>".length, indexOfCloseTag))
-                }
-                append(
-                    shopItem.title.substring(
-                        indexOfCloseTag + "</b>".length,
-                        shopItem.title.length
+                if (indexOfOpenTag >= 0) {
+                    append(shopItem.title.substring(0, indexOfOpenTag))
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(
+                            shopItem.title.substring(
+                                indexOfOpenTag + "<b>".length,
+                                indexOfCloseTag
+                            )
+                        )
+                    }
+                    append(
+                        shopItem.title.substring(
+                            indexOfCloseTag + "</b>".length,
+                            shopItem.title.length
+                        )
                     )
-                )
+                } else {
+                    append(shopItem.title)
+                }
             },
             modifier = Modifier.padding(start = 10.dp)
         )
