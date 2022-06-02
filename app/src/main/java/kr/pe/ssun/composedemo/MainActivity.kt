@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -27,8 +28,6 @@ import kr.pe.ssun.composedemo.ui.theme.ComposeDemoTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val mainViewModel by viewModels<MainViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,38 +36,38 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
 
-    @Composable
-    private fun ComposeDemoApp() {
-        val coroutineScope = rememberCoroutineScope()
+@Composable
+private fun ComposeDemoApp(mainViewModel: MainViewModel = viewModel()) {
+    val coroutineScope = rememberCoroutineScope()
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(modifier = Modifier.wrapContentHeight()) {
-                var textState by remember { mutableStateOf(TextFieldValue("")) }
-                TextField(
-                    value = textState,
-                    onValueChange = { textState = it },
-                    modifier = Modifier.weight(1f)
-                )
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            mainViewModel.search(textState.text)
-                        }
-                    },
-                    modifier = Modifier.wrapContentSize()
-                ) {
-                    Text("Search")
-                }
-            }
-            val searchResult by mainViewModel.searchResult.collectAsState()
-            ShopList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                shopItems = searchResult?.shopItems
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.wrapContentHeight()) {
+            var textState by remember { mutableStateOf(TextFieldValue("")) }
+            TextField(
+                value = textState,
+                onValueChange = { textState = it },
+                modifier = Modifier.weight(1f)
             )
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        mainViewModel.search(textState.text)
+                    }
+                },
+                modifier = Modifier.wrapContentSize()
+            ) {
+                Text("Search")
+            }
         }
+        val searchResult by mainViewModel.searchResult.collectAsState()
+        ShopList(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            shopItems = searchResult?.shopItems
+        )
     }
 }
 
