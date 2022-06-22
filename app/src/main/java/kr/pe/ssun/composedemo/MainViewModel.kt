@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     private val _searchResult = MutableStateFlow<SearchResult?>(null)
     val searchResult: StateFlow<SearchResult?> = _searchResult
 
-    suspend fun search(query: String) = viewModelScope.launch(Dispatchers.Main) {
+    suspend fun search(query: String) = onMain {
         searchUseCase(SearchParam(query, 100, 1, "date")).collect { result ->
             when {
                 result.isSuccess -> {
