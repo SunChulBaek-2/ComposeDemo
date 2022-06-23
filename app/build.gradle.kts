@@ -12,8 +12,10 @@ android {
         applicationId = "kr.pe.ssun.composedemo"
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = Versions.getProperty(file(rootProject.file("build.properties")), "versionCode").toInt()
+        versionName = Versions.getProperty(file(rootProject.file("build.properties")), "versionName")
+        println("[sunchulbaek] versionCode = $versionCode")
+        println("[sunchulbaek] versionName = $versionName")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

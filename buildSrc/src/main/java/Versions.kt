@@ -1,4 +1,10 @@
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
 object Versions {
+
+    fun getProperty(file: File, key: String): String = Properties().apply { load(FileInputStream(file)) }.getProperty(key)
 
     const val COMPILE_SDK = 32
     const val TARGET_SDK = 32
