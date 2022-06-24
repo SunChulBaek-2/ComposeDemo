@@ -52,6 +52,10 @@ android {
 }
 
 dependencies {
+    api(platform(project(":depconstraints")))
+    kapt(platform(project(":depconstraints")))
+    androidTestApi(platform(project(":depconstraints")))
+
     // UI
     implementation(Libs.CORE_KTX)
     implementation(Libs.LIFECYCLE_RUNTIME_KTX)

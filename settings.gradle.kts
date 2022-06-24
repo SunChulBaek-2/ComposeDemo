@@ -14,5 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ComposeDemo"
 include (
-    ":app"
+    ":app",
+    ":depconstraints"
 )

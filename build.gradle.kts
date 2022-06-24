@@ -1,3 +1,5 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 buildscript {
     repositories {
         google()
@@ -5,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT_AGP}")
     }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -17,6 +19,16 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version Versions.KOTLIN apply false
 }
 
-//task clean(type: Delete) {
-//    delete rootProject.buildDir
-//}
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
+}
+
+// https://github.com/ben-manes/gradle-versions-plugin
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        isNonStable(candidate.version)
+    }
+}
