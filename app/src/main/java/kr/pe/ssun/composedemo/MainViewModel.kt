@@ -1,33 +1,31 @@
 package kr.pe.ssun.composedemo
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kr.pe.ssun.composedemo.domain.SearchParam
-import kr.pe.ssun.composedemo.domain.SearchResult
-import kr.pe.ssun.composedemo.domain.SearchUseCase
+import kr.pe.ssun.composedemo.data.model.Photo
+import kr.pe.ssun.composedemo.domain.GetPhotoParam
+import kr.pe.ssun.composedemo.domain.GetPhotoUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val searchUseCase: SearchUseCase
+    private val getPhotoUseCase: GetPhotoUseCase
 ): ViewModel() {
 
-    private val _searchResult = MutableStateFlow<SearchResult?>(null)
-    val searchResult: StateFlow<SearchResult?> = _searchResult
+    private val _searchResult = mutableStateListOf<Photo>()
+    val searchResult: SnapshotStateList<Photo> = _searchResult
 
-    suspend fun search(query: String) = onMain {
-        searchUseCase(SearchParam(query, 100, 1, "date")).collect { result ->
+    suspend fun search() = onMain {
+        getPhotoUseCase(GetPhotoParam()).collect { result ->
             when {
                 result.isSuccess -> {
-                    _searchResult.emit(result.getOrNull())
+                    _searchResult.clear()
+                    _searchResult.addAll(result.getOrNull() ?: listOf())
                 }
                 result.isFailure -> {
-                    _searchResult.emit(null)
+                    _searchResult.clear()
                 }
             }
         }

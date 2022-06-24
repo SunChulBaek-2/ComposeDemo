@@ -21,8 +21,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "CLIENT_ID", "\"vCPpySLTvEU3lta2hZx5\"")
-        buildConfigField("String", "CLIENT_SECRET", "\"pvkERt_Pk2\"")
     }
 
     buildTypes {

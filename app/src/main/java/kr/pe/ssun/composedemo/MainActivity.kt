@@ -3,7 +3,8 @@ package kr.pe.ssun.composedemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,18 +12,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kr.pe.ssun.composedemo.data.model.ShopItem
+import kr.pe.ssun.composedemo.data.model.Photo
 import kr.pe.ssun.composedemo.ui.theme.ComposeDemoTheme
 
 @AndroidEntryPoint
@@ -40,92 +38,51 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ComposeDemoApp(mainViewModel: MainViewModel = viewModel()) {
-    val coroutineScope = rememberCoroutineScope()
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.wrapContentHeight()) {
-            var textState by remember { mutableStateOf(TextFieldValue("")) }
-            TextField(
-                value = textState,
-                onValueChange = { textState = it },
-                modifier = Modifier.weight(1f)
-            )
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        mainViewModel.search(textState.text)
-                    }
-                },
-                modifier = Modifier.wrapContentSize()
-            ) {
-                Text("Search")
-            }
-        }
-        val searchResult by mainViewModel.searchResult.collectAsState()
-        ShopList(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            shopItems = searchResult?.shopItems
-        )
+    LaunchedEffect(true) {
+        mainViewModel.search()
     }
-}
 
-@Composable
-fun ShopList(modifier: Modifier, shopItems: List<ShopItem>?) {
-    LazyColumn(modifier = modifier) {
-        shopItems?.forEach { shopItem ->
-            item(shopItem.productId) {
-                ShopItem(shopItem = shopItem)
+    LazyColumn {
+        mainViewModel.searchResult.forEach { photo ->
+            item {
+                PhotoView(item = photo) {
+                    // TODO : 상세화면 이동
+                }
             }
         }
     }
 }
 
 @Composable
-fun ShopItem(shopItem: ShopItem) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .clickable { },
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AsyncImage(
-            model = shopItem.image,
-            contentDescription = shopItem.title,
+fun PhotoView(item: Photo, onClick: () -> Unit) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp)
+        .border(width = 1.dp, color = Color.LightGray)
+        .clickable { onClick.invoke() }) {
+
+        Image(
             modifier = Modifier
-                .padding(start = 10.dp)
                 .width(100.dp)
                 .height(100.dp),
+            painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(item.thumbnailUrl)
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.Crop
+            ),
+            contentDescription = null,
             alignment = Alignment.Center,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Crop
         )
+
         Text(
-            text = buildAnnotatedString {
-                val indexOfOpenTag = shopItem.title.indexOf("<b>")
-                val indexOfCloseTag = shopItem.title.indexOf("</b>")
-                if (indexOfOpenTag >= 0) {
-                    append(shopItem.title.substring(0, indexOfOpenTag))
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(
-                            shopItem.title.substring(
-                                indexOfOpenTag + "<b>".length,
-                                indexOfCloseTag
-                            )
-                        )
-                    }
-                    append(
-                        shopItem.title.substring(
-                            indexOfCloseTag + "</b>".length,
-                            shopItem.title.length
-                        )
-                    )
-                } else {
-                    append(shopItem.title)
-                }
-            },
-            modifier = Modifier.padding(start = 10.dp)
+            modifier = Modifier
+                .padding(start = 110.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            text = item.title
         )
     }
 }
