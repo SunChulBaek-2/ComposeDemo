@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kr.pe.ssun.composedemo.data.ShopRepository
 import kr.pe.ssun.composedemo.data.model.ShopItem
+import kr.pe.ssun.composedemo.di.IoDispatcher
 import javax.inject.Inject
 
 data class GetShopParam(
@@ -12,7 +13,7 @@ data class GetShopParam(
 )
 
 class GetShopUseCase @Inject constructor(
-    dispatcher: CoroutineDispatcher,
+    @IoDispatcher dispatcher: CoroutineDispatcher,
     private val repository: ShopRepository
 ): FlowUseCase<GetShopParam, List<ShopItem>>(dispatcher) {
 
