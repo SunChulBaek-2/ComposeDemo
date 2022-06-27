@@ -9,11 +9,12 @@ android {
     compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
+        val buildProp = file(rootProject.file("build.properties"))
         applicationId = "kr.pe.ssun.composedemo"
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
-        versionCode = Versions.getProperty(file(rootProject.file("build.properties")), "versionCode").toInt()
-        versionName = Versions.getProperty(file(rootProject.file("build.properties")), "versionName")
+        versionCode = Versions.getProperty(buildProp, "versionCode").toInt()
+        versionName = Versions.getProperty(buildProp, "versionName")
         println("[sunchulbaek] versionCode = $versionCode")
         println("[sunchulbaek] versionName = $versionName")
 
@@ -21,6 +22,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "clientId", "\"${Versions.getProperty(buildProp, "clientId")}\"")
+        buildConfigField("String", "clientSecret", "\"${Versions.getProperty(buildProp, "clientSecret")}\"")
     }
 
     buildTypes {

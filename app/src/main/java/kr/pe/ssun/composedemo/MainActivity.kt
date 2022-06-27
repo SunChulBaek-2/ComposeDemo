@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,12 +16,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
-import kr.pe.ssun.composedemo.data.model.Photo
+import kr.pe.ssun.composedemo.data.model.ShopItem
 import kr.pe.ssun.composedemo.ui.theme.ComposeDemoTheme
 
 @AndroidEntryPoint
@@ -40,28 +43,31 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ComposeDemoApp(mainViewModel: MainViewModel = viewModel()) {
-    LaunchedEffect(true) {
-        mainViewModel.search()
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
-        Box(
+        TopAppBar(
+            title = { Text(text = stringResource(id = R.string.app_name)) },
+            modifier = Modifier,
+            backgroundColor = Color.Blue,
+            contentColor = Color.White,
+            elevation = 10.dp
+        )
+        Row(
+        ) {
+            var text by remember { mutableStateOf("") }
+            TextField(modifier = Modifier.weight(1f), value = text, onValueChange = { text = it })
+            Button(modifier = Modifier,
+                onClick = {
+                    mainViewModel.getShop(text)
+                }) { Text(text = "검색") }
+        }
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(44.dp)
-                .background(color = Color.Black)
-                .padding(start = 10.dp),
-            contentAlignment = Alignment.CenterStart
+                .weight(1f)
         ) {
-            Text(text = stringResource(id = R.string.app_name),
-            color = Color.White)
-        }
-        LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)) {
-            mainViewModel.searchResult.forEach { photo ->
+            mainViewModel.items.forEach { photo ->
                 item {
-                    PhotoView(item = photo) {
+                    ShopItemView(item = photo) {
                         // TODO : 상세화면 이동
                     }
                 }
@@ -71,7 +77,7 @@ private fun ComposeDemoApp(mainViewModel: MainViewModel = viewModel()) {
 }
 
 @Composable
-fun PhotoView(item: Photo, onClick: () -> Unit) {
+fun ShopItemView(item: ShopItem, onClick: () -> Unit) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -84,7 +90,7 @@ fun PhotoView(item: Photo, onClick: () -> Unit) {
                 .height(100.dp),
             painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(item.thumbnailUrl)
+                    .data(item.image)
                     .crossfade(true)
                     .build(),
                 contentScale = ContentScale.Crop
@@ -99,7 +105,13 @@ fun PhotoView(item: Photo, onClick: () -> Unit) {
                 .padding(start = 110.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            text = item.title
+            text = buildAnnotatedString {
+                append(item.title.substring(0, item.title.indexOf("<b>")))
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(item.title.substring(item.title.indexOf("<b>") + 3, item.title.indexOf("</b>")))
+                }
+                append(item.title.substring(item.title.indexOf("</b>") + 4))
+            }
         )
     }
 }

@@ -4,28 +4,28 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kr.pe.ssun.composedemo.data.model.Photo
-import kr.pe.ssun.composedemo.domain.GetPhotoParam
-import kr.pe.ssun.composedemo.domain.GetPhotoUseCase
+import kr.pe.ssun.composedemo.data.model.ShopItem
+import kr.pe.ssun.composedemo.domain.GetShopParam
+import kr.pe.ssun.composedemo.domain.GetShopUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getPhotoUseCase: GetPhotoUseCase
+    private val getShopUseCase: GetShopUseCase
 ): ViewModel() {
 
-    private val _searchResult = mutableStateListOf<Photo>()
-    val searchResult: SnapshotStateList<Photo> = _searchResult
+    private val _items = mutableStateListOf<ShopItem>()
+    val items: SnapshotStateList<ShopItem> = _items
 
-    suspend fun search() = onMain {
-        getPhotoUseCase(GetPhotoParam()).collect { result ->
+    fun getShop(query: String) = onMain {
+        getShopUseCase(GetShopParam(query)).collect { result ->
             when {
                 result.isSuccess -> {
-                    _searchResult.clear()
-                    _searchResult.addAll(result.getOrNull() ?: listOf())
+                    _items.clear()
+                    _items.addAll(result.getOrNull() ?: listOf())
                 }
                 result.isFailure -> {
-                    _searchResult.clear()
+                    _items.clear()
                 }
             }
         }
