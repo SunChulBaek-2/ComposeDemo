@@ -2,6 +2,9 @@ package kr.pe.ssun.composedemo.di
 
 import javax.inject.Qualifier
 
+/*
+   참고 : https://manuelvivo.dev/coroutinescope-hilt
+ */
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class DefaultDispatcher
