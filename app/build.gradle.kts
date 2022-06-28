@@ -75,6 +75,9 @@ dependencies {
     implementation(Libs.HILT_ANDROID)
     kapt(Libs.HILT_COMPILER)
 
+    // Navigation
+    implementation(Libs.NAVIGATION_COMPOSE)
+
     // Retrofit
     implementation(Libs.RETROFIT)
     implementation(Libs.RETROFIT_GSON_CONVERTER)

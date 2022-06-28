@@ -14,6 +14,7 @@ val extJunit = "1.1.3"
 val hilt = Versions.HILT_AGP
 val junit = "4.13.2"
 val lifecycle = "2.4.1"
+val navigation = "2.4.2"
 val okhttp = "4.9.3"
 val retrofit = "2.9.0"
 val timber = "5.0.1"
@@ -37,6 +38,7 @@ dependencies {
         api("${Libs.JUNIT}:$junit")
         api("${Libs.LIFECYCLE_RUNTIME_KTX}:$lifecycle")
         api("${Libs.LIFECYCLE_VIEW_MODEL_COMPOSE}:$lifecycle")
+        api("${Libs.NAVIGATION_COMPOSE}:$navigation")
         api("${Libs.OKHTTP_LOGGING_INTERCEPTER}:$okhttp")
         api("${Libs.RETROFIT}:$retrofit")
         api("${Libs.RETROFIT_GSON_CONVERTER}:$retrofit")

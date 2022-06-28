@@ -16,6 +16,7 @@ object Libs {
     const val JUNIT = "junit:junit"
     const val LIFECYCLE_RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx"
     const val LIFECYCLE_VIEW_MODEL_COMPOSE = "androidx.lifecycle:lifecycle-viewmodel-compose"
+    const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose"
     const val OKHTTP_LOGGING_INTERCEPTER = "com.squareup.okhttp3:logging-interceptor"
     const val RETROFIT = "com.squareup.retrofit2:retrofit"
     const val RETROFIT_GSON_CONVERTER = "com.squareup.retrofit2:converter-gson"
