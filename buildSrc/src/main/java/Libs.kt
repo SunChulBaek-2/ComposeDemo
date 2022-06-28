@@ -1,4 +1,5 @@
 object Libs {
+    const val ACCOMPANIST_WEBVIEW = "com.google.accompanist:accompanist-webview"
     const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose"
     const val COIL = "io.coil-kt:coil-compose"
     const val COMPOSE_UI = "androidx.compose.ui:ui"

@@ -3,6 +3,7 @@ plugins {
     id("maven-publish")
 }
 
+val accompanistWebview = "0.24.12-rc"
 val activityCompose = "1.4.0"
 val coil = "2.1.0"
 val compose = "1.2.0-rc02"
@@ -21,6 +22,7 @@ val timber = "5.0.1"
 
 dependencies {
     constraints {
+        api("${Libs.ACCOMPANIST_WEBVIEW}:$accompanistWebview")
         api("${Libs.ACTIVITY_COMPOSE}:$activityCompose")
         api("${Libs.COMPOSE_UI}:$compose")
         api("${Libs.COMPOSE_MATERIAL}:$compose")

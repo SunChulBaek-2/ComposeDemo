@@ -59,6 +59,7 @@ dependencies {
 
     // UI
     implementation(Libs.CORE_KTX)
+    implementation(Libs.ACCOMPANIST_WEBVIEW)
     implementation(Libs.LIFECYCLE_RUNTIME_KTX)
 
     // Compose

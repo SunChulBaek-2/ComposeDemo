@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,6 +30,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewState
 import dagger.hilt.android.AndroidEntryPoint
 import kr.pe.ssun.composedemo.ShopDestinations.SHOP_PRODUCT_ID
 import kr.pe.ssun.composedemo.data.model.ShopItem
@@ -90,10 +91,15 @@ private fun ComposeDemoApp(mainViewModel: MainViewModel = viewModel()) {
 
 @Composable
 private fun ShopDetail(productId: String?) {
-    // TODO : 웹뷰로 띄워보자
-    Column(modifier = Modifier.fillMaxSize().background(Color.Red)) {
-        Text(text = "productId = ${productId ?: ""}")
-    }
+    val url by remember { mutableStateOf("http://search.shopping.naver.com/product/${productId}") }
+    val state = rememberWebViewState(url = url)
+    WebView(
+        state = state,
+        modifier = Modifier.fillMaxSize(),
+        onCreated = { webView ->
+            webView.settings.javaScriptEnabled = true
+        }
+    )
 }
 
 @Composable
