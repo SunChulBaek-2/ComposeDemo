@@ -4,19 +4,19 @@ plugins {
 }
 
 val accompanistWebview = "0.24.12-rc"
-val activityCompose = "1.4.0"
+val activityCompose = "1.5.0"
 val coil = "2.1.0"
 val compose = "1.2.0-rc03"
 val composeUi = "1.1.1"
 val constraintLayoutCompose = "1.0.1"
-val coreKtx = "1.7.0"
+val coreKtx = "1.8.0"
 val espressoCore = "3.4.0"
 val extJunit = "1.1.3"
 val hilt = Versions.HILT_AGP
 val junit = "4.13.2"
-val lifecycle = "2.4.1"
-val navigation = "2.4.2"
-val okhttp = "4.9.3"
+val lifecycle = "2.5.0"
+val navigation = "2.5.0"
+val okhttp = "4.10.0"
 val retrofit = "2.9.0"
 val timber = "5.0.1"
 
