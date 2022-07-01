@@ -6,7 +6,7 @@ plugins {
 val accompanistWebview = "0.24.12-rc"
 val activityCompose = "1.4.0"
 val coil = "2.1.0"
-val compose = "1.2.0-rc02"
+val compose = "1.2.0-rc03"
 val composeUi = "1.1.1"
 val constraintLayoutCompose = "1.0.1"
 val coreKtx = "1.7.0"

@@ -10,7 +10,7 @@ object Versions {
     const val TARGET_SDK = 32
     const val MIN_SDK = 21
 
-    const val KOTLIN = "1.6.21"
-    const val COMPOSE = "1.2.0-rc02"
+    const val KOTLIN = "1.7.0"
+    const val COMPOSE_COMPILER = "1.2.0"
     const val HILT_AGP = "2.42"
 }
