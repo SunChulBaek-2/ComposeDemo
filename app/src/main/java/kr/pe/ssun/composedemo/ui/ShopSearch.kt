@@ -1,22 +1,27 @@
 package kr.pe.ssun.composedemo.ui
 
+import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,7 +50,24 @@ fun ShopSearch(
         Row(
         ) {
             var text by remember { mutableStateOf("") }
-            TextField(modifier = Modifier.weight(1f), value = text, onValueChange = { text = it })
+            TextField(
+                modifier = Modifier.weight(1f).onKeyEvent { e ->
+                    if (e.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+                        mainViewModel.getShop(text)
+                        text = ""
+                        true
+                    }
+                    false
+                },
+                value = text,
+                onValueChange = { text = it },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    mainViewModel.getShop(text)
+                    text = ""
+                }),
+            )
             Button(modifier = Modifier,
                 onClick = {
                     mainViewModel.getShop(text)
@@ -98,7 +120,8 @@ fun ShopItemView(item: ShopItem, onClick: () -> Unit) {
         CircularProgressIndicator(
             modifier = Modifier
                 .padding(top = 35.dp, start = 35.dp)
-                .width(30.dp).height(30.dp)
+                .width(30.dp)
+                .height(30.dp)
                 .alpha(if (state is AsyncImagePainter.State.Success || state is AsyncImagePainter.State.Error) 0f else 1f)
         )
 
